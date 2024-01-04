@@ -12,7 +12,7 @@ type Data = {
 export default function Root() {
   const [data, setData] = useState<Data>();
   const getData = async () => {
-    const res = await fetch("https://mern-notes-backend-ecru.vercel.app/");
+    const res = await fetch("https://mern-notesapp-backend.vercel.app/");
     const resJson = await res.json();
     setData(resJson);
     // return resJson;
