@@ -1,15 +1,21 @@
-import express, { Express, Request, Response } from "express";
+// import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const app: Express = express();
-const port = process.env.PORT || 3000;
+import express, { Request, Response } from "express";
 
-app.get("/", (req: Request, res: Response) => {
-  res.json({ name: "Aniket" });
+const app = express();
+const port = process.env.PORT || 8080;
+
+app.get("/", (_req: Request, res: Response) => {
+  return res.send("Express Typescript on Vercel");
+});
+
+app.get("/ping", (_req: Request, res: Response) => {
+  return res.send("pong 🏓");
 });
 
 app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+  return console.log(`Server is listening on ${port}`);
 });
