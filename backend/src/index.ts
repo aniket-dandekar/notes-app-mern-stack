@@ -1,20 +1,24 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import connectDB from "../config/db";
+import connectDB from "./config/db";
+import { auth, notes } from "./routes";
+// import auth from "./routes/auth";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 8000;
 
+connectDB();
+
+app.use(express.json());
+
+// Available Routes
+app.use("/api/auth", auth);
+app.use("/api/notes", notes);
+
 app.get("/", (req: Request, res: Response) => {
   connectDB();
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.json({ name: "aniket", surname: "dandekar", class: "badi" });
 });
 
