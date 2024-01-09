@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
+import connectDB from "../config/db";
 
 dotenv.config();
 
@@ -7,6 +8,7 @@ const app: Express = express();
 const port = process.env.PORT || 8000;
 
 app.get("/", (req: Request, res: Response) => {
+  connectDB();
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Methods",
