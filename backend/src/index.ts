@@ -9,8 +9,13 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 8000;
 
+// enabling CORS for some specific origins only.
+let corsOptions = {
+  origin: ["http://localhost:3000", "https://mern-notesapp.vercel.app/"],
+};
+
 connectDB();
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Available Routes
