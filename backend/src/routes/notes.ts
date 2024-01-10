@@ -36,7 +36,7 @@ router.post(
         user: req.user?.id,
         title,
         description,
-        tag,
+        tag: tag.length > 0 ? tag : "general",
       });
 
       res.json(createNote);
