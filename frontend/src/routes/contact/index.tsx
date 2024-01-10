@@ -2,7 +2,7 @@
 
 import { Link } from "react-router-dom";
 
-export default function Contact() {
+function Contact() {
   return (
     <div>
       <h1>Contact</h1>
@@ -12,3 +12,5 @@ export default function Contact() {
     </div>
   );
 }
+
+export default Contact;
