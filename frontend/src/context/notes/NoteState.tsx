@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import NoteContext from "./noteConext";
 
-const url = "http://localhost:8000";
+const url = import.meta.env.VITE_API_ENDPOINTF;
 
 type Props = {
   children: ReactNode;
@@ -21,6 +21,7 @@ const NoteState = (props: Props) => {
   const [noteState, setNoteState] = useState(notesInitial);
 
   const getNotes = async () => {
+    console.log(url);
     const response = await fetch(`${url}/api/notes/getallnotes`, {
       method: "GET",
       headers: {

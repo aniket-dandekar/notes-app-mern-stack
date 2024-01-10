@@ -34,8 +34,8 @@ const AddNote = () => {
           handleSubmit(e);
         }}
       >
-        <div className="max-w-4xl grid gap-8">
-          <div className="grid md:grid-cols-2 w-full gap-8">
+        <div className="max-w-4xl grid gap-6 md:gap-8">
+          <div className="grid md:grid-cols-2 w-full gap-6 md:gap-8">
             <input
               name="title"
               onChange={(e) => {
@@ -68,10 +68,10 @@ const AddNote = () => {
         </div>
         <button
           type="submit"
-          className="bg-primary text-primary-content"
+          className="bg-primary text-primary-content p-2 rounded px-4 my-2 md:my-4"
           onClick={handleSubmit}
         >
-          Add note
+          Add note +
         </button>
       </form>
     </div>

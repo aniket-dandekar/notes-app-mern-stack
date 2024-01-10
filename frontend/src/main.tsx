@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+// import dotenv from "dotenv";
+
 
 import "./index.css";
 
@@ -10,6 +12,8 @@ import NoteState from "./context/notes/NoteState.tsx";
 import AppWrap, { AppWrapFunction } from "./routes/AppWrap.tsx";
 import "@fontsource-variable/inter";
 import About from "./routes/about";
+
+// dotenv.config()
 
 function wrapper(AppWrap: AppWrapFunction, Component: () => JSX.Element) {
   const WrappedComponent = AppWrap(Component);
