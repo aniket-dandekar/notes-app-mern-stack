@@ -8,6 +8,8 @@ import Root from "./routes/root";
 import Contact from "./routes/contact";
 import NoteState from "./context/notes/NoteState.tsx";
 import AppWrap, { AppWrapFunction } from "./routes/AppWrap.tsx";
+import "@fontsource-variable/inter";
+import About from "./routes/about";
 
 function wrapper(AppWrap: AppWrapFunction, Component: () => JSX.Element) {
   const WrappedComponent = AppWrap(Component);
@@ -18,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: wrapper(AppWrap, Root),
+  },
+  {
+    path: "about",
+    element: wrapper(AppWrap, About),
   },
   {
     path: "contact",

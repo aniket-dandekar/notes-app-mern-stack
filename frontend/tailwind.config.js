@@ -3,6 +3,10 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        inter: "'Inter Variable', sans-serif",
+        poppins: "'Poppins', sans-serif",
+      },
       colors: {
         primary: "#9900ff",
         "primary-content": "#ffffff",
@@ -14,13 +18,13 @@ export default {
         "secondary-dark": "#cc0052",
         "secondary-light": "#ff3385",
 
-        background: "#1a171c",
-        foreground: "#27222a",
-        border: "#413946",
+        background: "#f0eff1",
+        foreground: "#fbfbfb",
+        border: "#e0dde2",
 
-        copy: "#fbfbfc",
-        "copy-light": "#dad5dd",
-        "copy-lighter": "#a89daf",
+        copy: "#272329",
+        "copy-light": "#685e6e",
+        "copy-lighter": "#8e8495",
 
         success: "#00ff00",
         warning: "#ffff00",
