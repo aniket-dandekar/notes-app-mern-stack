@@ -214,7 +214,7 @@ const NoteState = (props: Props) => {
 
   useEffect(() => {
     // handleLoading();
-    getNotes();
+    authToken && getNotes();
   }, []);
 
   return (
