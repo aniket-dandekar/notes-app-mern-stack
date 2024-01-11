@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import NoteContext from "../../context/notes/noteConext";
 import Note from "../../components/Note";
 import AddNote from "./AddNote";
-import { LuLoader2 } from "react-icons/lu";
+// import { LuLoader2 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 
 // import Navbar from "../../components/Navbar";
@@ -25,12 +25,7 @@ const Root = () => {
   const { noteState, actions } = useContext(NoteContext);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [loadingNotes, setLoadingNotes] = useState(false);
-
-  // const handleLoading = async () => {
-  //   setLoadingNotes(true);
-  //   setLoadingNotes(false);
-  // };
+  // const [loadingNotes, setLoadingNotes] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [eNote, setENote] = useState({
@@ -67,7 +62,6 @@ const Root = () => {
     if (!localStorage.getItem("mern-auth-token")) {
       navigate("/login");
     }
-    // handleLoading();
   }, []);
 
   return (
@@ -162,21 +156,10 @@ const Root = () => {
               ))}
             </div>
           ) : (
-            <>
-              {loadingNotes ? (
-                <div className="px-6 flex items-center gap-2">
-                  <LuLoader2 className="animate-spin text-xl" />
-                  <h3 className="font-poppins text-xl">Fetching notes</h3>
-                </div>
-              ) : (
-                <div className="px-6">
-                  <h3 className="text-xl font-poppins">
-                    Nothing to show here!
-                  </h3>
-                  <p>Add notes to show here</p>
-                </div>
-              )}
-            </>
+            <div className="px-6">
+              <h3 className="text-xl font-poppins">Nothing to show here!</h3>
+              <p>Add notes to show here</p>
+            </div>
           )}
         </div>
       </div>
