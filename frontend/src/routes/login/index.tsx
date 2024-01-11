@@ -49,8 +49,6 @@ const Login = () => {
       toastGenerator("Invalid details please try again!", "error");
     }
 
-    // actions.addNote(credentials.email, credentials.password);
-    // setCredentials({ title: "", description: "", tag: "" });
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
