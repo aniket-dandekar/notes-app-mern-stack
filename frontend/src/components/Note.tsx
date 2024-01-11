@@ -1,147 +1,53 @@
 // import React from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import NoteContext from "../context/notes/noteConext";
+import { NoteType } from "../routes/root";
 
 type Props = {
-  note: {
-    _id: string;
-    user: string;
-    title: string;
-    description: string;
-    tag: string;
-    date: string;
-    __v: number;
-  };
+  note: NoteType;
+  handleEdit: (note: NoteType) => void;
 };
 
-const Note = (props: Props) => {
-  const [showModal, setShowModal] = useState(false);
+const Note = ({ handleEdit, note }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { _id, title, description, tag } = props.note;
-  const [eNote, setENote] = useState({
-    etitle: title,
-    edescription: description,
-    etag: tag,
-  });
+  const { _id, title, description, tag } = note;
 
   const { actions } = useContext(NoteContext);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    actions.editNote(_id, eNote.etitle, eNote.edescription, eNote.etag);
-    setShowModal(false);
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onChange = (e: any) => {
-    setENote({ ...eNote, [e.target.name]: e.target.value });
-  };
-
   return (
-    <div className="relative p-6 rounded-3xl bg-foreground shadow-xl border border-border">
-      <h2 className="text-copy text-lg font-bold">{title}</h2>
+    <div className="relative flex flex-col p-6 rounded-3xl overflow-hidden bg-foreground shadow-xl border border-border">
+      <div
+        className="mb-auto"
+        style={{ wordWrap: "break-word", overflowWrap: "break-word" }}
+      >
+        <h2 className="text-copy text-lg font-bold">{title}</h2>
 
-      <p className="text-copy-light">{description}</p>
+        <p className="text-copy-light">{description}</p>
+      </div>
 
-      <span className="absolute top-0 right-0 px-6 py-0.5 rounded-tr-3xl rounded-bl-3xl bg-secondary text-secondary-content">
-        {tag}
-      </span>
-
-      <div className="flex gap-2 mt-2">
+      <div className="flex w-full gap-2">
         <button
-          className="bg-error text-error-content text-sm p-2 my-2 rounded"
+          className="bg-blue-500 text-error-content text-sm p-2 mt-4 rounded"
+          onClick={() => {
+            handleEdit(note);
+          }}
+        >
+          <FiEdit />
+        </button>
+        <button
+          className="bg-error text-error-content text-sm p-2 mt-4 rounded"
           onClick={() => {
             actions.deleteNote(_id);
           }}
         >
           <FaTrashAlt />
         </button>
-        <button
-          className="bg-error text-error-content text-sm p-2 my-2 rounded"
-          onClick={() => {
-            setShowModal(true);
-          }}
-        >
-          <FiEdit />
-        </button>
       </div>
-
-      {showModal ? (
-        <>
-          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-            <div className="relative my-6 mx-auto max-w-sm md:max-w-3xl">
-              {/*content*/}
-              <div className="rounded-3xl p-8 shadow-lg relative flex flex-col w-full bg-background outline-none focus:outline-none">
-                {/*header*/}
-                <div className="w-full mb-4 flex justify-between items-start">
-                  <h3 className="text-3xl">Edit Note</h3>
-                  <button
-                    className="underline text-lg"
-                    onClick={() => {
-                      setShowModal(false);
-                    }}
-                  >
-                    close
-                  </button>
-                </div>
-                {/*body*/}
-                <form
-                  onSubmit={(e) => {
-                    handleSubmit(e);
-                  }}
-                >
-                  <div className="max-w-4xl grid gap-8">
-                    <div className="grid md:grid-cols-2 w-full gap-8">
-                      <input
-                        name="etitle"
-                        value={eNote.etitle}
-                        onChange={(e) => {
-                          onChange(e);
-                        }}
-                        className="outline-none rounded-3xl py-3 px-4 text-lg bg-white"
-                        type="text"
-                        placeholder="Note titile"
-                      />
-                      <input
-                        name="etag"
-                        value={eNote.etag}
-                        onChange={(e) => {
-                          onChange(e);
-                        }}
-                        className="outline-none rounded-3xl py-3 px-4 text-lg bg-white"
-                        type="text"
-                        placeholder="Tag"
-                      />
-                    </div>
-                    <div>
-                      <textarea
-                        name="edescription"
-                        value={eNote.edescription}
-                        onChange={(e) => {
-                          onChange(e);
-                        }}
-                        className="outline-none resize-none w-full rounded-3xl py-3 px-4 text-lg bg-white"
-                        placeholder="Note Description"
-                      />
-                    </div>
-                  </div>
-                  <button
-                    type="submit"
-                    className="bg-primary text-primary-content p-2 rounded px-4 my-2 md:my-4"
-                    onClick={handleSubmit}
-                  >
-                    Edit note
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div className="opacity-40 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
+      <span className="absolute top-0 right-0 px-6 py-0.5 rounded-tr-3xl rounded-bl-3xl bg-secondary text-secondary-content">
+        {tag}
+      </span>
     </div>
   );
 };

@@ -34,7 +34,12 @@ export type NoteContent = {
       tag: string
     ) => void;
   };
+  toastGenerator: (
+    message: string,
+    toastType: "success" | "error" | "warning" | "info" | "server"
+  ) => void;
 };
+
 const NoteContext = createContext<NoteContent>({
   noteState: [],
   setNoteState: () => {},
@@ -47,6 +52,7 @@ const NoteContext = createContext<NoteContent>({
     addNote: () => {},
     editNote: () => {},
   },
+  toastGenerator: () => {},
 });
 
 export default NoteContext;

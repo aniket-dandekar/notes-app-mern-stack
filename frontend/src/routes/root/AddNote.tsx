@@ -18,6 +18,7 @@ const AddNote = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     actions.addNote(note.title, note.description, note.tag);
+    setNote({ title: "", description: "", tag: "" });
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,7 +29,7 @@ const AddNote = () => {
 
   return (
     <div>
-      <h1 className="mt-8 mb-4 text-2xl  font-poppins">Add Note</h1>
+      <h1 className="mt-8 mb-4 text-2xl font-poppins">Add Note</h1>
       <form
         onSubmit={(e) => {
           handleSubmit(e);
@@ -43,7 +44,9 @@ const AddNote = () => {
               }}
               className="outline-none rounded-3xl py-3 px-4 text-lg bg"
               type="text"
-              placeholder="Note titile"
+              placeholder="Note title"
+              minLength={5}
+              required
             />
             <input
               name="tag"
@@ -63,13 +66,14 @@ const AddNote = () => {
               }}
               className="outline-none resize-none w-full rounded-3xl py-3 px-4 text-lg bg"
               placeholder="Note Description"
+              minLength={5}
+              required
             />
           </div>
         </div>
         <button
           type="submit"
-          className="bg-primary text-primary-content p-2 rounded px-4 my-2 md:my-4"
-          onClick={handleSubmit}
+          className="bg-primary hover:bg-primary-dark duration-200 text-primary-content p-2 rounded px-4 my-2 md:my-4"
         >
           Add note +
         </button>
