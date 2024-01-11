@@ -1,15 +1,17 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   useEffect(() => {
-    const authToken = localStorage.getItem("mern-auth-token");
-    if (authToken) {
-      localStorage.removeItem("mern-auth-token");
-      navigate("/");
-    }
-    navigate("/");
+    // const authToken = localStorage.getItem("mern-auth-token");
+    // if (authToken) {
+    localStorage.removeItem("mern-auth-token");
+    window.location.href = "/";
+
+    // navigate("/");
+    // }
+    // navigate("/");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
