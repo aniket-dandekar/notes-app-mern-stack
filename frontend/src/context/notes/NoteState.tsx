@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import NoteContext from "./noteConext";
 import { ToastContainer, ToastOptions, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -211,11 +211,6 @@ const NoteState = (props: Props) => {
       });
     }
   };
-
-  useEffect(() => {
-    // handleLoading();
-    authToken && getNotes();
-  }, []);
 
   return (
     <NoteContext.Provider

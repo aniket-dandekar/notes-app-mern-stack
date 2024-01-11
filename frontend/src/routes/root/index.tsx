@@ -59,10 +59,12 @@ const Root = () => {
   };
 
   useEffect(() => {
-    if (!localStorage.getItem("mern-auth-token")) {
+    const authToken = localStorage.getItem("mern-auth-token");
+    if (!authToken) {
       navigate("/login");
     }
-  }, []);
+    actions.getNotes();
+  }, [actions, navigate]);
 
   return (
     <>
