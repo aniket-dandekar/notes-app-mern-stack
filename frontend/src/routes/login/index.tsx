@@ -44,11 +44,12 @@ const Login = () => {
 
       localStorage.setItem("mern-auth-token", resJson.authToken);
 
+      window.location.href = "/";
+
       console.log(resJson);
     } else {
       toastGenerator("Invalid details please try again!", "error");
     }
-
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

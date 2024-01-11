@@ -46,6 +46,8 @@ const Signup = () => {
 
       localStorage.setItem("mern-auth-token", resJson.authToken);
 
+      window.location.href = "/";
+
       console.log(resJson);
     } else {
       toastGenerator("Signup failed please try again!", "error");
