@@ -1,5 +1,7 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import NoteContext from "./noteConext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const url = import.meta.env.VITE_API_ENDPOINTF;
 
@@ -7,21 +9,37 @@ type Props = {
   children: ReactNode;
 };
 
+type Notes = {
+  _id: string;
+  user: string;
+  title: string;
+  description: string;
+  tag: string;
+  date: string;
+  __v: number;
+}[];
+
+const toaster = (length: number) => {
+  if (length === 0) {
+    toast.error("No notes found!", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
+};
+
 const NoteState = (props: Props) => {
-  const notesInitial: {
-    _id: string;
-    user: string;
-    title: string;
-    description: string;
-    tag: string;
-    date: string;
-    __v: number;
-  }[] = [];
+  const notesInitial: Notes = [];
 
   const [noteState, setNoteState] = useState(notesInitial);
 
   const getNotes = async () => {
-    console.log(url);
     const response = await fetch(`${url}/api/notes/getallnotes`, {
       method: "GET",
       headers: {
@@ -33,7 +51,9 @@ const NoteState = (props: Props) => {
 
     const resJson = await response.json();
     setNoteState(resJson);
-    // console.log(resJson);
+
+    toaster(resJson.length);
+    return resJson.length;
   };
 
   const addNote = async (title: string, description: string, tag?: string) => {
@@ -69,7 +89,7 @@ const NoteState = (props: Props) => {
         newArr[index].tag = tag;
         newArr[index].description = description;
         setNoteState(newArr);
-        console.log(id);
+        // console.log(id);
         const response = await fetch(`${url}/api/notes/updatenote/${id}`, {
           method: "PUT",
           headers: {
@@ -110,18 +130,26 @@ const NoteState = (props: Props) => {
     }
   };
 
-  useEffect(() => {
-    getNotes();
-  }, []);
-
   return (
     <NoteContext.Provider
       value={{
         noteState,
         setNoteState,
-        actions: { addNote, editNote, deleteNote },
+        actions: { getNotes, addNote, editNote, deleteNote },
       }}
     >
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       {props.children}
     </NoteContext.Provider>
   );

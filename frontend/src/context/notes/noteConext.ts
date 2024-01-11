@@ -24,6 +24,7 @@ export type NoteContent = {
     >
   >;
   actions: {
+    getNotes: () => Promise<number>;
     deleteNote: (id: string) => void;
     addNote: (title: string, description: string, tag?: string) => void;
     editNote: (
@@ -37,7 +38,15 @@ export type NoteContent = {
 const NoteContext = createContext<NoteContent>({
   noteState: [],
   setNoteState: () => {},
-  actions: { deleteNote: () => {}, addNote: () => {}, editNote: () => {} },
+  actions: {
+    getNotes: async () => {
+      const numberOfNotes = 0;
+      return numberOfNotes;
+    },
+    deleteNote: () => {},
+    addNote: () => {},
+    editNote: () => {},
+  },
 });
 
 export default NoteContext;
