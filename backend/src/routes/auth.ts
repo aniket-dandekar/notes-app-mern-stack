@@ -31,10 +31,11 @@ router.post(
     }),
   ],
   async (req: Request, res: Response) => {
+    let success = false;
     // Check and return Validations if errors present
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ success, errors: errors.array() });
     }
 
     try {
@@ -43,9 +44,10 @@ router.post(
       // Check if user exists
       let userExist = await User.findOne({ email: email });
       if (userExist) {
-        return res
-          .status(400)
-          .json({ error: "Sorry a user with this email already exists" });
+        return res.status(400).json({
+          success,
+          error: "Sorry a user with this email already exists",
+        });
       }
 
       // Encrypting / Hashing the password
@@ -68,9 +70,11 @@ router.post(
 
       const authToken = JWT_SECRET && jsonwebtoken.sign(data, JWT_SECRET);
 
-      res.json({ authToken });
+      success = true;
+
+      res.json({ success, authToken });
     } catch (error) {
-      res.status(500).send("Internal server error");
+      res.status(500).json({ success, error: "Internal server error" });
     }
   }
 );
@@ -84,10 +88,12 @@ router.post(
     body("password", "Password cannot be blank").exists(),
   ],
   async (req: Request, res: Response) => {
+    let success = false;
+
     // Check and return Validations if errors present
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ success, errors: errors.array() });
     }
 
     try {
@@ -96,9 +102,10 @@ router.post(
       // Check if user exists
       let userExist = await User.findOne({ email: email });
       if (!userExist) {
-        return res
-          .status(400)
-          .json({ error: "Please try to login with correct credentials" });
+        return res.status(400).json({
+          success,
+          error: "Please try to login with correct credentials",
+        });
       }
 
       // Authenticating user
@@ -107,9 +114,10 @@ router.post(
         userExist.password!
       );
       if (!passwordCompare) {
-        return res
-          .status(400)
-          .json({ error: "Please try to login with correct credentials" });
+        return res.status(400).json({
+          success,
+          error: "Please try to login with correct credentials",
+        });
       }
 
       // Sending authtoken after verification
@@ -121,9 +129,11 @@ router.post(
 
       const authToken = JWT_SECRET && jsonwebtoken.sign(data, JWT_SECRET);
 
-      res.json({ authToken });
+      success = true;
+
+      res.json({ success, authToken });
     } catch (error) {
-      res.status(500).send("Internal server error");
+      res.status(500).json({ success, error: "Internal server error" });
     }
   }
 );
@@ -134,15 +144,17 @@ router.post(
   "/getuser",
   fetchUser,
   async (req: Request, res: Response, next: NextFunction) => {
+    let success = false;
     try {
       //   const authToken = jsonwebtoken.sign(data, JWT_SECRET);
       const userId = req.user!.id;
       const user = await User.findById(userId).select("-password");
+      success = true;
 
-      res.json(user);
+      res.json({ success, user });
     } catch (error) {
       console.log(error);
-      res.status(500).send("Internal server error");
+      res.status(500).json({ success, error: "Internal server error" });
     }
   }
 );
