@@ -4,13 +4,7 @@ import ReactDOM from "react-dom/client";
 
 import "./index.css";
 
-import {
-  BrowserRouter,
-  // createBrowserRouter,
-  Route,
-  // RouterProvider,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NoteState from "./context/notes/NoteState.tsx";
 import AppWrap, { AppWrapFunction } from "./routes/AppWrap.tsx";
 import "@fontsource-variable/inter";
@@ -20,6 +14,7 @@ import About from "./routes/about/";
 import Login from "./routes/login/";
 import Signup from "./routes/signup/";
 import Logout from "./routes/logout/index.tsx";
+import PageNotFound from "./PageNotFound.tsx";
 
 // dotenv.config()
 
@@ -71,6 +66,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/logout" element={wrapper(AppWrap, Logout)} />
 
           <Route path="/signup" element={wrapper(AppWrap, Signup)} />
+
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </NoteState>
     </BrowserRouter>
