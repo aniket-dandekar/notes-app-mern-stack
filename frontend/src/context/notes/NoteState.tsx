@@ -66,6 +66,8 @@ const NoteState = (props: Props) => {
   const [noteState, setNoteState] = useState(notesInitial);
 
   const getNotes = async () => {
+    const toastId = toast.loading("Fetching notes...");
+
     const response = await fetch(`${url}/api/notes/getallnotes`, {
       method: "GET",
       headers: {
@@ -75,8 +77,23 @@ const NoteState = (props: Props) => {
     });
 
     const resJson = await response.json();
+
     if (response.status == 200) {
       setNoteState(resJson);
+      toast.update(toastId, {
+        render: "Notes loaded!",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
+      return resJson.length;
+    } else {
+      toast.update(toastId, {
+        render: "Failed to load notes! Reload",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
     }
 
     // toastGenerator("success", "success");

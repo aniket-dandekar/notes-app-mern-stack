@@ -64,7 +64,7 @@ const Root = () => {
       navigate("/login");
     }
     actions.getNotes();
-  }, [actions, navigate]);
+  }, []);
 
   return (
     <>
