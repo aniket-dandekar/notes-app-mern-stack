@@ -66,77 +66,83 @@ const NoteState = (props: Props) => {
   const [noteState, setNoteState] = useState(notesInitial);
 
   const getNotes = async () => {
-    const toastId = toast.loading("Fetching notes...");
+    if (authToken && authToken.length > 1) {
+      const toastId = toast.loading("Fetching notes...");
 
-    const response = await fetch(`${url}/api/notes/getallnotes`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": authToken!,
-      },
-    });
-
-    const resJson = await response.json();
-
-    if (response.status == 200) {
-      setNoteState(resJson);
-      toast.update(toastId, {
-        render: "Notes loaded!",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
+      const response = await fetch(`${url}/api/notes/getallnotes`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": authToken!,
+        },
       });
-      return resJson.length;
-    } else {
-      toast.update(toastId, {
-        render: "Failed to load notes! Reload",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
-    }
 
-    // toastGenerator("success", "success");
+      const resJson = await response.json();
 
-    return resJson.length;
-  };
-
-  const addNote = async (title: string, description: string, tag?: string) => {
-    const toastId = toast.loading("Adding note...");
-
-    const response = await fetch(`${url}/api/notes/addnote`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": authToken!,
-      },
-      body: JSON.stringify({ title, description, tag }),
-    });
-
-    if (response.status == 500) {
-      toastGenerator("Internal server error occured!", "server");
-    }
-
-    const newNote = await response.json();
-
-    if (response.status == 200) {
-      if (newNote) {
-        setNoteState(noteState.concat(newNote));
-        // toastGenerator("Note added successfully!", "success");
+      if (response.status == 200) {
+        setNoteState(resJson);
         toast.update(toastId, {
-          render: "Note added successfully!",
+          render: "Notes loaded!",
           type: "success",
           isLoading: false,
           autoClose: 3000,
         });
+        return resJson.length;
+      } else {
+        toast.update(toastId, {
+          render: "Failed to load notes! Reload",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        });
       }
+
+      // toastGenerator("success", "success");
+
+      return resJson.length;
     } else {
-      toast.update(toastId, {
-        render: "Failed to add note!",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
+      toastGenerator("Please login to continue", "error");
+    }
+  };
+
+  const addNote = async (title: string, description: string, tag?: string) => {
+    if (authToken && authToken.length > 1) {
+      const toastId = toast.loading("Adding note...");
+
+      const response = await fetch(`${url}/api/notes/addnote`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": authToken!,
+        },
+        body: JSON.stringify({ title, description, tag }),
       });
+
+      if (response.status == 500) {
+        toastGenerator("Internal server error occured!", "server");
+      }
+
+      const newNote = await response.json();
+
+      if (response.status == 200) {
+        if (newNote) {
+          setNoteState(noteState.concat(newNote));
+          // toastGenerator("Note added successfully!", "success");
+          toast.update(toastId, {
+            render: "Note added successfully!",
+            type: "success",
+            isLoading: false,
+            autoClose: 3000,
+          });
+        }
+      } else {
+        toast.update(toastId, {
+          render: "Failed to add note!",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        });
+      }
     }
   };
 
@@ -146,86 +152,90 @@ const NoteState = (props: Props) => {
     description: string,
     tag: string
   ) => {
-    const toastId = toast.loading("Fetching notes...");
+    if (authToken && authToken.length > 1) {
+      const toastId = toast.loading("Fetching notes...");
 
-    const newArr = noteState;
+      const newArr = noteState;
 
-    for (let index = 0; index < noteState.length; index++) {
-      const element = noteState[index];
+      for (let index = 0; index < noteState.length; index++) {
+        const element = noteState[index];
 
-      if (element._id === id) {
-        newArr[index].title = title;
-        newArr[index].tag = tag;
-        newArr[index].description = description;
+        if (element._id === id) {
+          newArr[index].title = title;
+          newArr[index].tag = tag;
+          newArr[index].description = description;
 
-        const response = await fetch(`${url}/api/notes/updatenote/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": authToken!,
-          },
-          body: JSON.stringify({ title, description, tag }),
-        });
-
-        if (response.status == 500) {
-          toastGenerator("Internal server error occured!", "server");
-        }
-
-        if (response.status != 200) {
-          toast.update(toastId, {
-            render: "Falied to edit note!",
-            type: "error",
-            isLoading: false,
-            autoClose: 3000,
+          const response = await fetch(`${url}/api/notes/updatenote/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "auth-token": authToken!,
+            },
+            body: JSON.stringify({ title, description, tag }),
           });
-          setTimeout(() => {
-            getNotes();
-          }, 3000);
-        } else {
-          setNoteState(newArr);
-          toast.update(toastId, {
-            render: "Edited note successfully!",
-            type: "success",
-            isLoading: false,
-            autoClose: 3000,
-          });
+
+          if (response.status == 500) {
+            toastGenerator("Internal server error occured!", "server");
+          }
+
+          if (response.status != 200) {
+            toast.update(toastId, {
+              render: "Falied to edit note!",
+              type: "error",
+              isLoading: false,
+              autoClose: 3000,
+            });
+            setTimeout(() => {
+              getNotes();
+            }, 3000);
+          } else {
+            setNoteState(newArr);
+            toast.update(toastId, {
+              render: "Edited note successfully!",
+              type: "success",
+              isLoading: false,
+              autoClose: 3000,
+            });
+          }
+          break;
         }
-        break;
       }
     }
   };
 
   const deleteNote = async (id: string) => {
-    const toastId = toast.loading("Deleting note...");
+    if (authToken && authToken.length > 1) {
+      const toastId = toast.loading("Deleting note...");
 
-    const response = await fetch(`${url}/api/notes/deletenote/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": authToken!,
-      },
-    });
-
-    if (response.status == 500) {
-      toastGenerator("Internal server error occured!", "server");
-    }
-
-    const resJson = await response.json();
-
-    if (resJson.success && resJson.deletedNote._id === id) {
-      const newNotesnotes = noteState.filter((item) => {
-        if (item._id !== id) {
-          return item;
-        }
+      const response = await fetch(`${url}/api/notes/deletenote/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": authToken!,
+        },
       });
-      setNoteState(newNotesnotes);
-      // toastGenerator("Note was deleted successfully!", "success");
-      toast.update(toastId, {
-        render: "Note was deleted successfully!",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
-      });
+
+      if (response.status == 500) {
+        toastGenerator("Internal server error occured!", "server");
+      }
+
+      const resJson = await response.json();
+
+      if (resJson.success && resJson.deletedNote._id === id) {
+        const newNotesnotes = noteState.filter((item) => {
+          if (item._id !== id) {
+            return item;
+          }
+        });
+        setNoteState(newNotesnotes);
+        // toastGenerator("Note was deleted successfully!", "success");
+        toast.update(toastId, {
+          render: "Note was deleted successfully!",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
+      }
     }
   };
 
