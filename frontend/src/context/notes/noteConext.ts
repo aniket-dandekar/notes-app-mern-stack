@@ -28,10 +28,10 @@ export type NoteContent = {
     deleteNote: (id: string) => void;
     addNote: (title: string, description: string, tag?: string) => void;
     editNote: (
-      id: string,
-      title: string,
-      description: string,
-      tag: string
+      editId: string,
+      editTitle: string,
+      editDescription: string,
+      editTag: string
     ) => void;
   };
   toastGenerator: (

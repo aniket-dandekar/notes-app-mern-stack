@@ -1,8 +1,9 @@
 // import React from "react";
 
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import NoteContext from "../../context/notes/noteConext";
+// import NoteContext from "../../context/notes/noteConext";
+import { toast } from "react-toastify";
 
 // type Props = {};
 
@@ -10,7 +11,7 @@ const url = import.meta.env.VITE_API_ENDPOINTF;
 
 const Login = () => {
   const navigate = useNavigate();
-  const { toastGenerator } = useContext(NoteContext);
+  // const { toastGenerator } = useContext(NoteContext);
 
   const [credentials, setCredentials] = useState({
     email: "",
@@ -19,6 +20,8 @@ const Login = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmit = async (e: any) => {
+    const toastId = toast.loading("Getting login info...");
+
     e.preventDefault();
 
     const response = await fetch(`${url}/api/auth/login`, {
@@ -33,22 +36,36 @@ const Login = () => {
     });
 
     if (response.status == 500) {
-      toastGenerator("Server unavailable, try again!", "server");
+      toast.update(toastId, {
+        render: "Server unavailable, please try again!",
+        type: "error",
+        isLoading: false,
+        autoClose: 5000,
+      });
       return;
     }
 
     if (response.status == 200) {
-      toastGenerator("Login successful!", "success");
+      toast.update(toastId, {
+        render: "Login successful!",
+        type: "success",
+        isLoading: false,
+        autoClose: 5000,
+      });
 
       const resJson = await response.json();
 
       localStorage.setItem("mern-auth-token", resJson.authToken);
-
-      window.location.href = "/";
-
-      console.log(resJson);
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1000);
     } else {
-      toastGenerator("Invalid details please try again!", "error");
+      toast.update(toastId, {
+        render: "Invalid details please try again!",
+        type: "error",
+        isLoading: false,
+        autoClose: 5000,
+      });
     }
   };
 

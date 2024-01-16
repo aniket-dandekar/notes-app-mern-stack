@@ -1,8 +1,7 @@
 import express, { Request, Response } from "express";
 import fetchUser from "../middleware/middleware";
 import Notes from "../models/Notes";
-import { body } from "express-validator";
-import { create } from "domain";
+import { body, validationResult } from "express-validator";
 
 const router = express.Router();
 
@@ -23,12 +22,20 @@ router.post(
   "/addnote",
   fetchUser,
   [
-    body("title", "Enter a valid title").isLength({ min: 3 }),
+    body("title", "Enter a valid title").isLength({ min: 5 }),
     body("description", "Description must be atleast 5 characters").isLength({
       min: 5,
     }),
   ],
   async (req: Request, res: Response) => {
+    let success = false;
+
+    // Check and return Validations if errors present
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success, errors: errors.array() });
+    }
+
     try {
       const { title, description, tag } = req.body;
 
@@ -51,7 +58,21 @@ router.post(
 router.put(
   "/updatenote/:id",
   fetchUser,
+  [
+    body("title", "Enter a valid title").isLength({ min: 5 }),
+    body("description", "Description must be atleast 5 characters").isLength({
+      min: 5,
+    }),
+  ],
   async (req: Request, res: Response) => {
+    let success = false;
+
+    // Check and return Validations if errors present
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success, errors: errors.array() });
+    }
+
     try {
       const { title, description, tag } = req.body;
 

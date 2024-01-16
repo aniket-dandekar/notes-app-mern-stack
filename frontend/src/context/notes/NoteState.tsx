@@ -8,6 +8,10 @@ const url = import.meta.env.VITE_API_ENDPOINTF;
 
 const authToken = localStorage.getItem("mern-auth-token");
 
+interface CustomResponse extends Response {
+  errors?: [{ value: string }];
+}
+
 type Props = {
   children: ReactNode;
 };
@@ -67,6 +71,7 @@ const NoteState = (props: Props) => {
 
   const getNotes = async () => {
     if (authToken && authToken.length > 1) {
+      // noteState.length === 0
       const toastId = toast.loading("Fetching notes...");
 
       const response = await fetch(`${url}/api/notes/getallnotes`, {
@@ -147,52 +152,64 @@ const NoteState = (props: Props) => {
   };
 
   const editNote = async (
-    id: string,
-    title: string,
-    description: string,
-    tag: string
+    editId: string,
+    editTitle: string,
+    editDescription: string,
+    editTag: string
   ) => {
     if (authToken && authToken.length > 1) {
-      const toastId = toast.loading("Fetching notes...");
+      const toastId = toast.loading("Editing notes...");
 
-      const newArr = noteState;
+      const newArr = [...noteState];
 
       for (let index = 0; index < noteState.length; index++) {
-        const element = noteState[index];
+        if (noteState[index]._id === editId) {
+          newArr[index] = {
+            ...newArr[index],
+            title: editTitle,
+            tag: editTag,
+            description: editDescription,
+          };
 
-        if (element._id === id) {
-          newArr[index].title = title;
-          newArr[index].tag = tag;
-          newArr[index].description = description;
+          const response: CustomResponse = await fetch(
+            `${url}/api/notes/updatenote/${editId}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                "auth-token": authToken!,
+              },
+              body: JSON.stringify({
+                title: editTitle,
+                description: editDescription,
+                tag: editTag,
+              }),
+            }
+          );
 
-          const response = await fetch(`${url}/api/notes/updatenote/${id}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              "auth-token": authToken!,
-            },
-            body: JSON.stringify({ title, description, tag }),
-          });
-
-          if (response.status == 500) {
+          if (response.status === 500) {
             toastGenerator("Internal server error occured!", "server");
           }
 
-          if (response.status != 200) {
-            toast.update(toastId, {
-              render: "Falied to edit note!",
-              type: "error",
-              isLoading: false,
-              autoClose: 3000,
-            });
-            setTimeout(() => {
-              getNotes();
-            }, 3000);
-          } else {
+          if (response.status == 200) {
             setNoteState(newArr);
             toast.update(toastId, {
               render: "Edited note successfully!",
               type: "success",
+              isLoading: false,
+              autoClose: 3000,
+            });
+          } else if (response.status == 400 && editDescription.length < 5) {
+            toast.update(toastId, {
+              render: "Description must be 5 characters long",
+              type: "error",
+              isLoading: false,
+              autoClose: 3000,
+            });
+          } else {
+            toast.update(toastId, {
+              render: "Falied to edit note!",
+              type: "error",
               isLoading: false,
               autoClose: 3000,
             });
